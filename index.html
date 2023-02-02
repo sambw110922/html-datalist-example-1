@@ -1,0 +1,301 @@
+<!doctype html>
+<html>
+
+	<head>
+		<title>Example Datalist</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+		
+			html, body {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				margin: 0; padding: 0;
+				font-family: "Arial", sans-serif;
+				font-size: 18px;
+				background-color: #d5d7db;
+			}
+			
+			nav {
+				background-color: #97bff7;
+				padding: 2%;
+			}
+			
+			#mainNavLink {
+				color: #0d3585;
+				text-decoration: none;
+				font-size: 2em;
+			}
+			
+			#mainNavLink:hover {
+				text-decoration: underline;
+			}
+			
+			#tagline {
+				font-family: "Times New Roman", serif;
+				font-style: italic;
+				font-size: 1.5em;
+			}
+			
+			#theForm, #theBio {
+				width: 80%;
+				margin-left: auto; 
+				margin-right: auto;
+				background-color: white;
+				padding: 2%;
+				margin-top: 5%;
+				font-family: "Verdana", sans-serif;
+			}
+			
+			#theBio {
+				margin-top: 2%;
+			}
+			
+			footer {
+				background-color: black;
+				color: white;
+				padding: 5%;
+				margin-top: 5%;
+			}
+			
+			.inDisplay {
+				display: block !important;
+			}
+			
+			.noDisplay {
+				display: none !important;
+			}
+		
+		</style>
+	</head>
+	
+	<body>
+	
+		<nav>
+		
+			<a href="./index.html" id="mainNavLink">
+				<h1>
+					Example Datalist
+				</h1>
+			</a>
+
+			<p id="tagline">Enter a character's name in the search bar for a small bio.</p>	
+			
+		</nav>
+		
+		<!--	The root app.	-->
+		<div id="root">
+		
+			<section id="theForm">
+				
+				<h2>The Search Bar</h2>
+				
+				<p>Enter the name of a Star Trek captain for a small bio about them.</p>
+				
+				<label for="lstSearch">
+					Search:
+				<label>
+				
+				<input list="lstCharacter" name="txtCharacter" id="txtCharacter" />
+				
+				<button id="btnSearch" name="btnSearch">Search</button>
+				
+				<button id="btnClear" name="btnClear">Clear</button>
+				
+				<!--	A list of star trek captains.	-->
+				<datalist name="lstCharacter" id="lstCharacter">
+					<option value="Picard" />
+					<option value="Sisko" />
+					<option value="Janeway" />
+					<option value="Kirk" />
+					<option value="Archer" />
+				</datalist>
+				
+			</section>
+			
+			<!--	The bio.	-->
+			<section id="theBio">
+				
+				<h2 id="characterName">[ Character Name ]</h2>
+				
+				<article>
+					<p id="characterBio"> [ bio ] </p>
+				</article>
+				
+				<h3>Commands:</h3>
+				
+				<p>The vessel or vessels that this character has been to command:</p>
+				
+				<ul id="lstCommands">
+				</ul>
+				
+			</section>
+			
+		</div>
+		
+		<footer>
+			2023
+		</footer>
+		
+		<script>
+	
+	//	If the bio has been loaded.
+	var isDisplay = false;
+	
+	//	The name to search.
+	var searchTerm = "NULL";
+	
+	//	an array of bio information
+	const bios = [
+		{
+			"searchTerm":"Picard",
+			"charName":"Jean-Luc Picard",
+			"bio":"Captain Jean-Luc Picard was first seen in the TV show Star Trek: The Next Generation.",
+			"commands":[
+				"USS Enterprise 1701-D",
+				"USS Enterprise 1701-E"
+			]
+		},
+		{
+			"searchTerm":"Archer",
+			"charName":"Jonathan Archer",
+			"bio":"Captain Jonathan Archer was first seen in the TV show Star Trek: Enterprise.",
+			"commands":[
+				"USS Enterprise NX-1701"
+			]
+		},
+		{
+			"searchTerm":"Sisko",
+			"charName":"Benjamin Sisko",
+			"bio":"Captain Benjamin Sisko was first seen on the TV show Star Trek: Deep Space Nine.",
+			"commands":[
+				"Deep Space Nine",
+				"USS Defiant"
+			]
+		},
+		{
+			"searchTerm":"Janeway",
+			"charName":"Kathryn Janeway",
+			"bio":"Captain Kathryn Janeway was first seen on the TV show Star Trek: Voyager.",
+			"commands":[
+				"USS Voyager"
+			]
+		},
+		{
+			"searchTerm":"Kirk",
+			"charName":"James T Kirk",
+			"bio":"Captain James T Kirk was first seen on the TV show Star Trek.",
+			"commands":[
+				"USS Enterprise 1701",
+				"USS Enterprise 1701-A"
+			]
+		}
+	];
+	
+	//	What happens when btnReset is clicked.
+	//	change values to default.
+	function btnReset(){
+		
+		isDisplay = false;
+		searchTerm = "NULL";
+		document.getElementById("txtCharacter").value = "";
+		document.getElementById("lstCommands").innerText = "";
+
+		
+		ChangeDisplay();
+		
+	}
+	
+	//	When the user has selected an option
+	function SearchCharacters(){
+		
+		var theFoundCaptain;
+		
+		for(let i = 0; i < bios.length; i++){
+			
+			if(bios[i].searchTerm == searchTerm){
+				theFoundCaptain = bios[i];
+				isDisplay = true;
+				break;
+			}
+			
+		}
+		
+		//	If character found, display the details.
+		DisplayCharacter(theFoundCaptain);
+	
+	}
+	
+	//	Change the display class 
+	function ChangeDisplay(){
+		
+		if(isDisplay == true){
+			document.getElementById("theBio").className = "";
+			document.getElementById("theBio").className = "isDisplay";
+		} else {
+			document.getElementById("theBio").className = "";
+			document.getElementById("theBio").className = "noDisplay";
+		}
+		
+	}
+	
+	//	Displays the character found in the bio.
+	function DisplayCharacter(foundCaptain){
+	
+		//	Changes the display depending if a character has been found or not
+		ChangeDisplay();
+	
+		document.getElementById("characterName").innerText = foundCaptain.charName;
+		document.getElementById("characterBio").innerText = foundCaptain.bio;
+		
+		document.getElementById("lstCommands").innerText = "";
+		
+		for(let i = 0; i < foundCaptain.commands.length; i++){
+		
+			var cmd = document.createElement("li");
+			cmd.innerText = foundCaptain.commands[i];
+			
+			document.getElementById("lstCommands").appendChild(cmd);
+			
+		}
+
+		
+	}
+	
+	//	What happens on load.
+	function init(){
+	
+		//	Hide the display intially
+		document.getElementById("theBio").className = "";
+		document.getElementById("theBio").className = "noDisplay";
+		
+		//	When the user clicks on btnClear
+		document.getElementById("btnClear").addEventListener("click", function(){
+			btnReset();
+		});
+		
+		//	When button search has been clicked
+		document.getElementById("btnSearch").addEventListener("click", function(){
+			
+			if(searchTerm != "NULL" && searchTerm != ""){
+				SearchCharacters();
+			}
+			
+		});
+		
+		//	When the list has been changed
+		document.getElementById("txtCharacter").addEventListener("change", function(){
+			searchTerm = this.value;
+		});
+		
+	}
+	
+	//	run script on load
+	init();
+		
+		</script>
+		
+	</body>
+	
+</html>
